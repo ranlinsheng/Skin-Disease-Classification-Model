@@ -7,7 +7,7 @@ The existing skin disease classification models are trained with a dataset that 
 The Diverse Dermatology Image (DDI) dataset consists of skin lesion images diagnosed in Sandford Clinics from 2010 to 2020. The skin tones are determined using chart review of the in-person visit and consensus review by two board-certified dermatologists, while the skin diseases are biopsy proven diagnoses (Daneshjou Roxana et al., 2022). The total images in the dataset is 656. 
 - [Data Set](https://drive.google.com/drive/folders/1lrumdZMu-Evdos4TBeiJqQgQXHFxTa9U?usp=sharing)
 
-
+## Code
 -  step1: loading data
 ```python
 #data
@@ -87,6 +87,7 @@ filters = build_filters()
 ```
 - step4: Classification
 #### Random Forest
+RF - Binary Model
 ```python
 #cross-validation method
 cv = KFold(n_splits=5, random_state=20, shuffle=True)
@@ -102,7 +103,23 @@ rf_recal = cross_val_score(model_rfc, data_x, data_y, scoring='recall', cv=cv, n
 rf_roc = cross_val_score(model_rfc, data_x, data_y, scoring='roc_auc', cv=cv, n_jobs=-1)
 ```
 
+RF Multi-Class Model
+```python
+#cross-validation method
+cv = KFold(n_splits=5, random_state=20, shuffle=True)
+
+#build RF model
+model_rfc = rfc()
+
+#use k-fold CV to evaluate model
+mrf_accu = cross_val_score(model_rfc, mul_data_x, mul_data_y, scoring='accuracy', cv=cv)
+mrf_pres = cross_val_score(model_rfc, mul_data_x, mul_data_y, scoring='precision_macro', cv=cv)
+mrf_f1 = cross_val_score(model_rfc, mul_data_x, mul_data_y, scoring='f1_macro', cv=cv)
+mrf_recal = cross_val_score(model_rfc, mul_data_x, mul_data_y, scoring='recall_macro', cv=cv)
+```
+
 #### Decision Tree
+DT - Binary Model
 ```python
 #cross-validation method
 cv = KFold(n_splits=5, random_state=20, shuffle=True)
@@ -117,9 +134,24 @@ dt_f1 = cross_val_score(model_dt, data_x, data_y, scoring='f1', cv=cv, n_jobs=-1
 dt_recal = cross_val_score(model_dt, data_x, data_y, scoring='recall', cv=cv, n_jobs=-1)
 dt_roc = cross_val_score(model_dt, data_x, data_y, scoring='roc_auc', cv=cv, n_jobs=-1)
 ```
-#### Support Vector Machine
+DT - Multi Class Model
 ```python
-from sklearn.svm import SVC
+#cross-validation method
+cv = KFold(n_splits=5, random_state=20, shuffle=True)
+
+#build DT model
+model_dt = DecisionTreeClassifier()
+
+#use k-fold CV to evaluate model
+mdt_accu = cross_val_score(model_dt, mul_data_x, mul_data_y, scoring='accuracy', cv=cv)
+mdt_pres = cross_val_score(model_dt, mul_data_x, mul_data_y, scoring='precision_macro', cv=cv)
+mdt_f1 = cross_val_score(model_dt, mul_data_x, mul_data_y, scoring='f1_macro', cv=cv)
+mdt_recal = cross_val_score(model_dt, mul_data_x, mul_data_y, scoring='recall_macro', cv=cv)
+```
+
+#### Support Vector Machine
+SVM - Binary Model
+```pythonfrom sklearn.svm import SVC
 
 cv = KFold(n_splits=5, random_state=20, shuffle=True)
 
@@ -131,7 +163,20 @@ svm_f1 = cross_val_score(model_svm, data_x, data_y, scoring='f1', cv=cv, n_jobs=
 svm_recal = cross_val_score(model_svm, data_x, data_y, scoring='recall', cv=cv, n_jobs=-1)
 svm_roc = cross_val_score(model_svm, data_x, data_y, scoring='roc_auc', cv=cv, n_jobs=-1)
 ```
+SVM - Multi Class
+```python
+cv = KFold(n_splits=5, random_state=20, shuffle=True)
+
+model_svm = SVC(kernel ='rbf', random_state = 0)
+
+msvm_accu = cross_val_score(model_svm, mul_data_x, mul_data_y, scoring='accuracy', cv=cv)
+msvm_pres = cross_val_score(model_svm, mul_data_x, mul_data_y, scoring='precision_macro', cv=cv)
+msvm_f1 = cross_val_score(model_svm, mul_data_x, mul_data_y, scoring='f1_macro', cv=cv)
+msvm_recal = cross_val_score(model_svm, mul_data_x, mul_data_y, scoring='recall_macro', cv=cv)
+```
+
 #### Naive Bayes
+Binary - Naive Bayes
 ```python
 from sklearn.naive_bayes import GaussianNB
 
@@ -145,7 +190,21 @@ nb_f1 = cross_val_score(model_gNB, data_x, data_y, scoring='f1', cv=cv, n_jobs=-
 nb_recal = cross_val_score(model_gNB, data_x, data_y, scoring='recall', cv=cv, n_jobs=-1)
 nb_roc = cross_val_score(model_gNB, data_x, data_y, scoring='roc_auc', cv=cv, n_jobs=-1)
 ```
+Multi Class - Naive Bayes
+```python
+cv = KFold(n_splits=5, random_state=20, shuffle=True)
+
+model_gNB = GaussianNB()
+
+mgNB_accu = cross_val_score(model_gNB, mul_data_x, mul_data_y, scoring='accuracy', cv=cv)
+mgNB_pres = cross_val_score(model_gNB, mul_data_x, mul_data_y, scoring='precision_macro', cv=cv)
+mgNB_f1 = cross_val_score(model_gNB, mul_data_x, mul_data_y, scoring='f1_macro', cv=cv)
+mgNB_recal = cross_val_score(model_gNB, mul_data_x, mul_data_y, scoring='recall_macro', cv=cv)
+```
+```python
+
 #### K-Nearest Neighbour
+Binary - KNN
 ```python
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -159,7 +218,18 @@ knn_f1 = cross_val_score(model_kNN, data_x, data_y, scoring='f1', cv=cv, n_jobs=
 knn_recal = cross_val_score(model_kNN, data_x, data_y, scoring='recall', cv=cv, n_jobs=-1)
 knn_roc = cross_val_score(model_kNN, data_x, data_y, scoring='roc_auc', cv=cv, n_jobs=-1)
 ```
+Multi Class - KNN
+```python
+model_kNN = KNeighborsClassifier(n_neighbors=3)
+
+mknn_accu = cross_val_score(model_kNN, mul_data_x, mul_data_y, scoring='accuracy', cv=cv)
+mknn_pres = cross_val_score(model_kNN, mul_data_x, mul_data_y, scoring='precision_macro', cv=cv)
+mknn_f1 = cross_val_score(model_kNN, mul_data_x, mul_data_y, scoring='f1_macro', cv=cv)
+mknn_recal = cross_val_score(model_kNN, mul_data_x, mul_data_y, scoring='recall_macro', cv=cv)
+```
+
 #### Extreme Gradient Boosting 
+Binary - XGBoost
 ```python
 from xgboost import XGBClassifier
 model_XGB = XGBClassifier(n_estimators=110,max_depth=300,min_child_weight=1,verbosity =0,n_jobs=16)
@@ -170,6 +240,17 @@ XGB_f1 = cross_val_score(model_XGB, data_x, data_y, scoring='f1', cv=cv, n_jobs=
 XGB_recal = cross_val_score(model_XGB, data_x, data_y, scoring='recall', cv=cv, n_jobs=-1)
 XGB_roc = cross_val_score(model_XGB, data_x, data_y, scoring='roc_auc', cv=cv, n_jobs=-1)
 ```
+
+Multi Class - XGBoost
+```python
+model_XGB = XGBClassifier(n_estimators=110,max_depth=300,min_child_weight=1,verbosity =0,n_jobs=16)
+
+mxgb_accu = cross_val_score(model_XGB, mul_data_x, mul_data_y, scoring='accuracy', cv=cv)
+mxgb_pres = cross_val_score(model_XGB, mul_data_x, mul_data_y, scoring='precision_macro', cv=cv)
+mxgb_f1 = cross_val_score(model_XGB, mul_data_x, mul_data_y, scoring='f1_macro', cv=cv)
+mxgb_recal = cross_val_score(model_XGB, mul_data_x, mul_data_y, scoring='recall_macro', cv=cv)
+```
+
 ## Results
 
 | Classifiers | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
